@@ -32,8 +32,9 @@ public class CalendarEndpoint {
     @RequestMapping(method = RequestMethod.GET, path = "/calendar")
     public ResponseEntity<Resource> fetchCalendarFileInICalFormat() throws IOException {
         int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
-        List<String> eventsInCalendar = fetchEventsFromSpecificCalendar(month);
-        List<String> summariesForEventsInCalendar = fetchSummariesForEventsInCalendar(month);
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+        List<String> eventsInCalendar = fetchEventsFromSpecificCalendar(month, year);
+        List<String> summariesForEventsInCalendar = fetchSummariesForEventsInCalendar(month, year);
         Resource fileSystemResource = new FileSystemResource(calendarService.createNewCalendarFile(eventsInCalendar, summariesForEventsInCalendar, month));
 
         return ResponseEntity
@@ -42,9 +43,9 @@ public class CalendarEndpoint {
                 .body(fileSystemResource);
     }
 
-    private List<String> fetchSummariesForEventsInCalendar(int month) throws IOException {
+    private List<String> fetchSummariesForEventsInCalendar(int month, int year) throws IOException {
         List<String> summaries = new ArrayList<>();
-        Document document = Jsoup.connect("http://www.weeia.p.lodz.pl/pliki_strony_kontroler/kalendarz.php?rok=2019&miesiac=" + month + "&lang=1").get();
+        Document document = Jsoup.connect("http://www.weeia.p.lodz.pl/pliki_strony_kontroler/kalendarz.php?rok=" + year + "&miesiac=" + month + "&lang=1").get();
         Elements elements = document.select("div.InnerBox");
 
         for (Element element : elements) {
@@ -54,8 +55,8 @@ public class CalendarEndpoint {
         return summaries;
     }
 
-    private List<String> fetchEventsFromSpecificCalendar(int month) throws IOException {
-        Document document = Jsoup.connect("http://www.weeia.p.lodz.pl/pliki_strony_kontroler/kalendarz.php?rok=2019&miesiac=" + month + "&lang=1").get();
+    private List<String> fetchEventsFromSpecificCalendar(int month, int year) throws IOException {
+        Document document = Jsoup.connect("http://www.weeia.p.lodz.pl/pliki_strony_kontroler/kalendarz.php?rok=" + year + "&miesiac=" + month + "&lang=1").get();
         Elements elements = document.select("a.active");
         List<String> events = new ArrayList<>();
 
