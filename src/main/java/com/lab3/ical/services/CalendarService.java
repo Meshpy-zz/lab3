@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 public class CalendarService {
 
-    public void createNewCalendarFile(List<String> dates, List<String> summaries, int month) throws IOException {
+    public File createNewCalendarFile(List<String> dates, List<String> summaries, int month) throws IOException {
         File file = createNewFile();
         FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
@@ -26,6 +26,8 @@ public class CalendarService {
 
         bufferedWriter.write(CalendarUtils.CAL_END);
         bufferedWriter.close();
+
+        return file;
     }
 
     private void writeFile(List<String> dates, List<String> summaries, int month, BufferedWriter bufferedWriter) throws IOException {

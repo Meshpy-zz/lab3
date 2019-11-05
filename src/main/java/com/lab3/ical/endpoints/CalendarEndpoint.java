@@ -6,6 +6,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,12 +27,15 @@ public class CalendarEndpoint {
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/calendar/{month}")
-    public @ResponseBody ResponseEntity<?> fetchCalendarFileInICalFormat(@PathVariable int month) throws IOException {
+    public ResponseEntity<Resource> fetchCalendarFileInICalFormat(@PathVariable int month) throws IOException {
         List<String> eventsInCalendar = fetchEventsFromSpecificCalendar(month);
         List<String> summariesForEventsInCalendar = fetchSummariesForEventsInCalendar(month);
-        calendarService.createNewCalendarFile(eventsInCalendar, summariesForEventsInCalendar, month);
+        Resource fileSystemResource = new FileSystemResource(calendarService.createNewCalendarFile(eventsInCalendar, summariesForEventsInCalendar, month));
 
-        return null;
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.parseMediaType("text/calendar"))
+                .body(fileSystemResource);
     }
 
     private List<String> fetchSummariesForEventsInCalendar(int month) throws IOException {
