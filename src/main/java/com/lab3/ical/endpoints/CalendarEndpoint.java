@@ -10,10 +10,13 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 @RestController
@@ -26,8 +29,9 @@ public class CalendarEndpoint {
         this.calendarService = calendarService;
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/calendar/{month}")
-    public ResponseEntity<Resource> fetchCalendarFileInICalFormat(@PathVariable int month) throws IOException {
+    @RequestMapping(method = RequestMethod.GET, path = "/calendar")
+    public ResponseEntity<Resource> fetchCalendarFileInICalFormat() throws IOException {
+        int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
         List<String> eventsInCalendar = fetchEventsFromSpecificCalendar(month);
         List<String> summariesForEventsInCalendar = fetchSummariesForEventsInCalendar(month);
         Resource fileSystemResource = new FileSystemResource(calendarService.createNewCalendarFile(eventsInCalendar, summariesForEventsInCalendar, month));

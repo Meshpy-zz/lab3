@@ -1,10 +1,10 @@
 **Aplikacja generująca kalendarz w formacie iCal (.ics).**
 
-| Metoda | Scieżka | Parametr | Opis |
-| ------ | ------ | ------ | ------ |
-| GET    | /calendar | month  | usługa zwraca plik w formacie .ics |
+| Metoda | Scieżka |  Opis |
+| ------ | ------ |  ------ |
+| GET    | /calendar |  usługa zwraca plik w formacie .ics z kalendarzem dla danego miesiąca |
 
 Przykładowe użycie usługi
 ```sh 
-curl http://localhost:8080/calendar/11
+curl http://localhost:8080/calendar
 ```
