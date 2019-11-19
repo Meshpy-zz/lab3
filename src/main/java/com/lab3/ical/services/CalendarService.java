@@ -12,7 +12,7 @@ import java.util.List;
 public class CalendarService {
 
     public File createNewCalendarFile(List<String> dates, List<String> summaries, int month) throws IOException {
-        File file = createNewFile();
+        File file = new File(CalendarUtils.FILE_NAME);
         FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
@@ -33,27 +33,17 @@ public class CalendarService {
     private void writeFile(List<String> dates, List<String> summaries, int month, BufferedWriter bufferedWriter) throws IOException {
         for (int i = 0; i < dates.size(); i++) {
             bufferedWriter.write(CalendarUtils.EVENT_BEGIN);
-            bufferedWriter.write(CalendarUtils.SUMMARY + summaries.get(i) + "\n");
             if (dates.get(i).length() == 1) {
-                bufferedWriter.write(CalendarUtils.DATE_START + month + "0" + dates.get(i) + "\n");
-                bufferedWriter.write(CalendarUtils.DATE_END + month + "0" +dates.get(i) + "\n");
+                bufferedWriter.write(CalendarUtils.DATE_START + month + "0" + dates.get(i) + "\r\n");
+                bufferedWriter.write(CalendarUtils.DATE_END + month + "0" +dates.get(i) + "\r\n");
             }
             else {
-                bufferedWriter.write(CalendarUtils.DATE_START + month + dates.get(i) + "\n");
-                bufferedWriter.write(CalendarUtils.DATE_END + month +dates.get(i) + "\n");
+                bufferedWriter.write(CalendarUtils.DATE_START + month + dates.get(i) + "\r\n");
+                bufferedWriter.write(CalendarUtils.DATE_END + month +dates.get(i) + "\r\n");
             }
+            bufferedWriter.write(CalendarUtils.SUMMARY + summaries.get(i) + "\r\n");
             bufferedWriter.write(CalendarUtils.EVENT_END);
         }
-    }
-
-    private File createNewFile() throws IOException {
-        File file = new File(CalendarUtils.FILE_NAME);
-
-        if (!file.exists()) {
-            file.createNewFile();
-        }
-
-        return file;
     }
 
 }
